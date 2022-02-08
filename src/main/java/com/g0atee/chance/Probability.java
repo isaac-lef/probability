@@ -2,12 +2,12 @@ package com.g0atee.chance;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Probability implements Chance {
+public final class Probability implements Chance {
 	private final double value;
 
-	public Probability(double value) {
-		if (value < 0.0 || value > 1.0)
-			throw new IllegalArgumentException("Probabilities must be between 0 and 1 (input was "+value+")");
+	public Probability(final double value) {
+		if (value < 0.0 || value > 1.0 || Double.isNaN(value))
+			throw new IllegalArgumentException("Probabilities must be valid numbers between 0 and 1 included (input was "+value+")");
 
 		this.value = value;
 	}
@@ -23,13 +23,15 @@ public class Probability implements Chance {
     }
 
     @Override
-    public int compareTo(Chance o) {
+    public int compareTo(final Chance o) {
         if (o instanceof Probability) {
             return Double.compare(this.value, ((Probability) o).value);
         }
-        // TODO : other types
+        // TODO : compareTo other types
         return 0;
     }
+
+    // TODO : casting to other types
 
     @Override
     public Chance complement() {
@@ -52,11 +54,11 @@ public class Probability implements Chance {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof Probability) {
-            return this.value == ((Probability) obj).value;
+            return Double.valueOf(this.value).equals( Double.valueOf(((Probability) obj).value ));
         }
-        // TODO : other types
+        // TODO : equals on other types
         return false;
     }
 }

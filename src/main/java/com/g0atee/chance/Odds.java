@@ -13,17 +13,6 @@ public final class Odds implements Chance {
 	}
 
 	@Override
-	public int compareTo(Chance o) {
-		if (o instanceof Odds) {
-			return Double.compare(this.value, ((Odds) o).value);
-		}
-		// TODO : compareTo other types
-		return 0;
-	}
-
-	// TODO : casting to other types
-
-	@Override
 	public double value() {
 		return value;
 	}
@@ -33,8 +22,11 @@ public final class Odds implements Chance {
 		if (value == 0.0) {
 			return new Odds(Double.POSITIVE_INFINITY);
 		}
+		// TODO : verify if the case value=POSITIVE_INFINITY is correctly handled
 		return new Odds(1 / value);
 	}
+
+	// PREDICATES
 
 	@Override
 	public boolean match() {
@@ -51,10 +43,28 @@ public final class Odds implements Chance {
 		return value == Double.POSITIVE_INFINITY;
 	}
 
+	// CASTING TO OTHER TYPES
+
+	public Probability toProbability() {
+		if (isCertain()) {
+			return new Probability(1.0);
+		}
+		return new Probability(value / (value + 1));
+	}
+
+	public LogOdds toLogOdds() {
+		return new LogOdds(Math.log(value));
+	}
+
+	// COMPARISON
+
 	@Override
-	public String toString() {
-		Rational r = toRational(value);
-		return "" + r.num + "/" + r.denom;
+	public int compareTo(Chance o) {
+		if (o instanceof Odds) {
+			return Double.compare(this.value, ((Odds) o).value);
+		}
+		// TODO : compareTo other types
+		return 0;
 	}
 
 	@Override
@@ -64,6 +74,12 @@ public final class Odds implements Chance {
 		}
 		// TODO : equals on other types
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		Rational r = toRational(value);
+		return "" + r.num + "/" + r.denom;
 	}
 
 

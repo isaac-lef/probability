@@ -24,8 +24,8 @@ public interface Chance extends Comparable<Chance>{
 	 * </code>
 	 * </blockquote>
 	 * </p>
-     * <p>Uses {@link java.util.concurrent.ThreadLocalRandom#nextDouble() ThreadLocalRandom.nextDouble()}</p>
-     * <p>Not cryptographically secure!</p>
+	 * <p>Uses {@link java.util.concurrent.ThreadLocalRandom#nextDouble() ThreadLocalRandom.nextDouble()}</p>
+	 * <p>Not cryptographically secure!</p>
 	 */
 	public boolean match();
 

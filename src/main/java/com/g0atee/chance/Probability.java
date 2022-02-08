@@ -17,48 +17,63 @@ public final class Probability implements Chance {
 		return value;
 	}
 
-    @Override
-    public boolean isImpossible() {
-        return value == 0.0;
-    }
+	@Override
+	public Chance complement() {
+		return new Probability(1.0 - value);
+	}
 
-    @Override
-    public int compareTo(final Chance o) {
-        if (o instanceof Probability) {
-            return Double.compare(this.value, ((Probability) o).value);
-        }
-        // TODO : compareTo other types
-        return 0;
-    }
+	// PREDICATES
 
-    // TODO : casting to other types
+	@Override
+	public boolean match() {
+		return ThreadLocalRandom.current().nextDouble() < value;
+	}
 
-    @Override
-    public Chance complement() {
-        return new Probability(1.0 - value);
-    }
+	@Override
+	public boolean isImpossible() {
+		return value == 0.0;
+	}
 
-    @Override
-    public boolean match() {
-        return ThreadLocalRandom.current().nextDouble() < value;
-    }
+	@Override
+	public boolean isCertain() {
+		return value == 1.0;
+	}
 
-    @Override
-    public boolean isCertain() {
-        return value == 1.0;
-    }
+	// CASTING TO OTHER TYPES
 
-    @Override
-    public String toString() {
-        return Double.toString(value * 100) + "%";
-    }
+	public Odds toOdds() {
+		if (isCertain()) {
+			return new Odds(Double.POSITIVE_INFINITY);
+		}
+		return new Odds(value / (1 - value));
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj instanceof Probability) {
-            return Double.valueOf(this.value).equals( Double.valueOf(((Probability) obj).value ));
-        }
-        // TODO : equals on other types
-        return false;
-    }
+	public LogOdds toLogOdds() {
+		return toOdds().toLogOdds();
+	}
+
+	// COMPARISON
+
+	@Override
+	public int compareTo(final Chance o) {
+		if (o instanceof Probability) {
+			return Double.compare(this.value, ((Probability) o).value);
+		}
+		// TODO : compareTo other types
+		return 0;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof Probability) {
+			return Double.valueOf(this.value).equals( Double.valueOf(((Probability) obj).value ));
+		}
+		// TODO : equals on other types
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return Double.toString(value * 100) + "%";
+	}
 }

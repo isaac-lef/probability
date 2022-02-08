@@ -38,7 +38,7 @@ public final class Odds implements Chance {
 
 	@Override
 	public boolean match() {
-		return ThreadLocalRandom.current().nextDouble(Double.POSITIVE_INFINITY) < value;
+		return ThreadLocalRandom.current().nextDouble(Double.MAX_VALUE) < value;
 	}
 
 	@Override

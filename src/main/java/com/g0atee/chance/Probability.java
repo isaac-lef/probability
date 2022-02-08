@@ -41,6 +41,12 @@ public final class Probability implements Chance {
 
 	// CASTING TO OTHER TYPES
 
+	@Override
+	public Probability toProbability() {
+		return this;
+	}
+
+	@Override
 	public Odds toOdds() {
 		if (isCertain()) {
 			return new Odds(Double.POSITIVE_INFINITY);
@@ -48,6 +54,7 @@ public final class Probability implements Chance {
 		return new Odds(value / (1 - value));
 	}
 
+	@Override
 	public LogOdds toLogOdds() {
 		return toOdds().toLogOdds();
 	}
@@ -56,19 +63,16 @@ public final class Probability implements Chance {
 
 	@Override
 	public int compareTo(final Chance o) {
-		if (o instanceof Probability) {
-			return Double.compare(this.value, ((Probability) o).value);
-		}
-		// TODO : compareTo other types
-		return 0;
+		return Double.compare(this.value, o.toProbability().value);
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof Probability) {
-			return Double.valueOf(this.value).equals( Double.valueOf(((Probability) obj).value ));
+		if (obj instanceof Chance) {
+			Double val1 = Double.valueOf(this.value);
+			Double val2 = Double.valueOf(((Chance) obj).toProbability().value);
+			return val1.equals(val2);
 		}
-		// TODO : equals on other types
 		return false;
 	}
 

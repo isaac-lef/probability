@@ -2,7 +2,7 @@ package com.g0atee.chance;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class LogOdds implements Chance {
+public final class LogOdds implements Chance {
 	private final double value;
 
 	public LogOdds(double value) {
@@ -41,31 +41,35 @@ public class LogOdds implements Chance {
 
 	// CASTING TO OTHER TYPES
 
+	@Override
 	public Probability toProbability() {
 		return toOdds().toProbability();
 	}
 
+	@Override
 	public Odds toOdds() {
 		return new Odds(Math.exp(value));
+	}
+
+	@Override
+	public LogOdds toLogOdds() {
+		return this;
 	}
 
 	// COMPARISON
 
 	@Override
 	public int compareTo(Chance o) {
-		if (o instanceof LogOdds) {
-			return Double.compare(this.value, ((LogOdds) o).value);
-		}
-		// TODO : compareTo other types
-		return 0;
+		return Double.compare(this.value, o.toLogOdds().value);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof LogOdds) {
-			return Double.valueOf(this.value).equals( Double.valueOf(((LogOdds) obj).value ));
+		if (obj instanceof Chance) {
+			Double val1 = Double.valueOf(this.value);
+			Double val2 = Double.valueOf(((Chance) obj).toLogOdds().value);
+			return val1.equals(val2);
 		}
-		// TODO : equals other types
 		return false;
 	}
 

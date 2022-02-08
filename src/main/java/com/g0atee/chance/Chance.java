@@ -38,4 +38,10 @@ public interface Chance extends Comparable<Chance>{
 	 * Check if the value is the highest acceptable one, a.k.a if this chance corresponds to an event that happens systematically.
 	 */
 	public boolean isCertain();
+
+	public Probability toProbability();
+
+	public Odds toOdds();
+
+	public LogOdds toLogOdds();
 }

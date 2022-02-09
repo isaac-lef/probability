@@ -21,9 +21,9 @@ public final class Probability extends Chance {
 	}
 
 	/**
-	 * <p>Let's say the current Chance corresponds to an event E. This returns a new Probability corresponding to the complement not(E).</p>
-	 * Example : <code>p</code> is the chance of getting an <i>even</i> number when throwing a dice.<br/>
-	 * then <code>p.complement()</code> is the chance of getting an <i>odd</i> number.
+	 * <p>Let's say the current Probability corresponds to an event E. This returns a new Probability corresponding to the complement not(E).</p>
+	 * Example : <code>p</code> is the probability of getting an <i>even</i> number when throwing a dice.<br/>
+	 * then <code>p.complement()</code> is the probability of getting an <i>odd</i> number.
 	 */
 	public Probability complement() {
 		return new Probability(1 - value);

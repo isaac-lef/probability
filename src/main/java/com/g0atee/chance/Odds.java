@@ -21,9 +21,9 @@ public final class Odds extends Chance {
 	}
 
 	/**
-	 * <p>Let's say the current Chance corresponds to an event E. This returns a new Odds corresponding to the complement not(E).</p>
-	 * Example : <code>p</code> is the chance of getting an <i>even</i> number when throwing a dice.<br/>
-	 * then <code>p.complement()</code> is the chance of getting an <i>odd</i> number.
+	 * <p>Let's say the current Odds corresponds to an event E. This returns a new Odds corresponding to the complement not(E).</p>
+	 * Example : <code>p</code> is the odds of getting an <i>even</i> number when throwing a dice.<br/>
+	 * then <code>p.complement()</code> is the odds of getting an <i>odd</i> number.
 	 */
 	public Odds complement() {
 		if (isImpossible()) {

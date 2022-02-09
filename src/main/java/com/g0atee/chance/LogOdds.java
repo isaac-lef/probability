@@ -21,9 +21,9 @@ public final class LogOdds extends Chance {
 	}
 
 	/**
-	 * <p>Let's say the current Chance corresponds to an event E. This returns a new LogOdds corresponding to the complement not(E).</p>
-	 * Example : <code>p</code> is the chance of getting an <i>even</i> number when throwing a dice.<br/>
-	 * then <code>p.complement()</code> is the chance of getting an <i>odd</i> number.
+	 * <p>Let's say the current LogOdds corresponds to an event E. This returns a new LogOdds corresponding to the complement not(E).</p>
+	 * Example : <code>p</code> is the LogOdds of getting an <i>even</i> number when throwing a dice.<br/>
+	 * then <code>p.complement()</code> is the LogOdds of getting an <i>odd</i> number.
 	 */
 	public LogOdds complement() {
 		return new LogOdds(-value);

@@ -1,17 +1,18 @@
 package com.g0atee.chance;
 
-public interface Chance extends Comparable<Chance>{
+public abstract class Chance implements Comparable<Chance>{
+	protected final double value;
+
+	protected Chance(double value) {
+		this.value = value;
+	}
+
 	/**
 	 * Access the value stored in this Chance
 	 */
-	public double value();
-
-	/**
-	 * <p>Let's say the current Chance corresponds to an event E. This returns a new Chance corresponding to the complement not(E).</p>
-	 * Example : <code>p</code> is the chance of getting an <i>even</i> number when throwing a dice.<br/>
-	 * then <code>p.complement()</code> is the chance of getting an <i>odd</i> number.
-	 */
-	public Chance complement();
+	public double value() {
+		return value;
+	}
 
 	/**
 	 * <p>This method returns <code>true</code> at random, with a chance <i>matching</i> the value it holds.</p>
@@ -27,21 +28,37 @@ public interface Chance extends Comparable<Chance>{
 	 * <p>Uses {@link java.util.concurrent.ThreadLocalRandom#nextDouble() ThreadLocalRandom.nextDouble()}</p>
 	 * <p>Not cryptographically secure!</p>
 	 */
-	public boolean match();
+	public abstract boolean match();
+
+	/**
+	 * <p>A {@link java.util.function.Predicate Predicate} that takes whatever object/value, and returns the result of {@link #match()}.</p>
+	 * <p>For use in {@link java.util.stream.Stream#filter(java.util.function.Predicate) Stream.filter()} :</p>
+	 * <blockquote>
+	 * <code>
+	 * Probability p = new Probability(0.5);
+	 * int[] randomInts = IntStream.range(0, 1000)
+	 * 	.filter(p::match)
+	 * 	.toArray();
+	 * </code>
+	 * </blockquote>
+	 */
+	public <T> boolean match(T t) {
+		return match();
+	}
 
 	/**
 	 * Check if the value is the lowest acceptable one, a.k.a if this chance corresponds to an impossible event.
 	 */
-	public boolean isImpossible();
+	public abstract boolean isImpossible();
 
 	/**
 	 * Check if the value is the highest acceptable one, a.k.a if this chance corresponds to an event that happens systematically.
 	 */
-	public boolean isCertain();
+	public abstract boolean isCertain();
 
-	public Probability toProbability();
+	public abstract Probability toProbability();
 
-	public Odds toOdds();
+	public abstract Odds toOdds();
 
-	public LogOdds toLogOdds();
+	public abstract LogOdds toLogOdds();
 }

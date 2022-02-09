@@ -2,23 +2,30 @@ package com.g0atee.chance;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class LogOdds implements Chance {
-	private final double value;
+public final class LogOdds extends Chance {
+	public static final double IMPOSSIBLE = Double.NEGATIVE_INFINITY;
+	public static final double CERTAIN = Double.POSITIVE_INFINITY;
 
 	public LogOdds(double value) {
+		super(value);
 		if (Double.isNaN(value))
 			throw new IllegalArgumentException("Logarithmic odds should be a valid number between -∞ and +∞ included, not " + value + ".");
-
-		this.value = value;
 	}
 
-	@Override
-	public double value() {
-		return value;
+	public static LogOdds impossible() {
+		return new LogOdds(IMPOSSIBLE);
 	}
 
-	@Override
-	public Chance complement() {
+	public static LogOdds certain() {
+		return new LogOdds(CERTAIN);
+	}
+
+	/**
+	 * <p>Let's say the current Chance corresponds to an event E. This returns a new LogOdds corresponding to the complement not(E).</p>
+	 * Example : <code>p</code> is the chance of getting an <i>even</i> number when throwing a dice.<br/>
+	 * then <code>p.complement()</code> is the chance of getting an <i>odd</i> number.
+	 */
+	public LogOdds complement() {
 		return new LogOdds(-value);
 	}
 
@@ -31,12 +38,12 @@ public final class LogOdds implements Chance {
 
 	@Override
 	public boolean isImpossible() {
-		return value == Double.NEGATIVE_INFINITY;
+		return value == IMPOSSIBLE;
 	}
 
 	@Override
 	public boolean isCertain() {
-		return value == Double.POSITIVE_INFINITY;
+		return value == CERTAIN;
 	}
 
 	// CASTING TO OTHER TYPES

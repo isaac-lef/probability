@@ -2,24 +2,31 @@ package com.g0atee.chance;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class Odds implements Chance {
-	private final double value;
+public final class Odds extends Chance {
+	public static final double IMPOSSIBLE = 0.0;
+	public static final double CERTAIN = Double.POSITIVE_INFINITY;
 
 	public Odds(final double value) {
-		if (value < 0.0 || Double.isNaN(value))
+		super(value);
+		if (value < IMPOSSIBLE || Double.isNaN(value))
 			throw new IllegalArgumentException("Odds must be valid numbers between 0 and +∞ included");
-
-		this.value = value;
 	}
 
-	@Override
-	public double value() {
-		return value;
+	public static Odds impossible() {
+		return new Odds(IMPOSSIBLE);
 	}
 
-	@Override
-	public Chance complement() {
-		if (value == 0.0) {
+	public static Odds certain() {
+		return new Odds(CERTAIN);
+	}
+
+	/**
+	 * <p>Let's say the current Chance corresponds to an event E. This returns a new Odds corresponding to the complement not(E).</p>
+	 * Example : <code>p</code> is the chance of getting an <i>even</i> number when throwing a dice.<br/>
+	 * then <code>p.complement()</code> is the chance of getting an <i>odd</i> number.
+	 */
+	public Odds complement() {
+		if (isImpossible()) {
 			return new Odds(Double.POSITIVE_INFINITY);
 		}
 		// TODO : verify if the case value=POSITIVE_INFINITY is correctly handled
@@ -35,12 +42,12 @@ public final class Odds implements Chance {
 
 	@Override
 	public boolean isImpossible() {
-		return value == 0.0;
+		return value == IMPOSSIBLE;
 	}
 
 	@Override
 	public boolean isCertain() {
-		return value == Double.POSITIVE_INFINITY;
+		return value == CERTAIN;
 	}
 
 	// CASTING TO OTHER TYPES

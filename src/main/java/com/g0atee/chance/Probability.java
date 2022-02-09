@@ -2,24 +2,31 @@ package com.g0atee.chance;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class Probability implements Chance {
-	private final double value;
+public final class Probability extends Chance {
+	public static final double IMPOSSIBLE = 0.0;
+	public static final double CERTAIN = 1.0;
 
 	public Probability(final double value) {
-		if (value < 0.0 || value > 1.0 || Double.isNaN(value))
+		super(value);
+		if (value < IMPOSSIBLE || value > CERTAIN || Double.isNaN(value))
 			throw new IllegalArgumentException("Probabilities must be valid numbers between 0 and 1 included (input was "+value+")");
-
-		this.value = value;
 	}
 
-	@Override
-	public double value() {
-		return value;
+	public static Probability impossible() {
+		return new Probability(IMPOSSIBLE);
 	}
 
-	@Override
-	public Chance complement() {
-		return new Probability(1.0 - value);
+	public static Probability certain() {
+		return new Probability(CERTAIN);
+	}
+
+	/**
+	 * <p>Let's say the current Chance corresponds to an event E. This returns a new Probability corresponding to the complement not(E).</p>
+	 * Example : <code>p</code> is the chance of getting an <i>even</i> number when throwing a dice.<br/>
+	 * then <code>p.complement()</code> is the chance of getting an <i>odd</i> number.
+	 */
+	public Probability complement() {
+		return new Probability(1 - value);
 	}
 
 	// PREDICATES
@@ -31,12 +38,12 @@ public final class Probability implements Chance {
 
 	@Override
 	public boolean isImpossible() {
-		return value == 0.0;
+		return value == IMPOSSIBLE;
 	}
 
 	@Override
 	public boolean isCertain() {
-		return value == 1.0;
+		return value == CERTAIN;
 	}
 
 	// CASTING TO OTHER TYPES

@@ -9,15 +9,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.IntStream;
 
-public class ProbabilityTest {
-	public static final double EPSILON = 0.00000001; // used for tiny differences between doubles
+public final class ProbabilityTest {
+	private ProbabilityTest(){} // Constructor is private so that the class cannot be instanciated
 
-	Probability pImpossible = new Probability(0.0);
-	Probability pHalf       = new Probability(0.5);
-	Probability pCertain    = new Probability(1.0);
+	private static final double EPSILON = 0.000_000_000_000_001; // used for tiny differences between doubles
+
+	private static final Probability pImpossible = new Probability(0.0);
+	private static final Probability pHalf       = new Probability(0.5);
+	private static final Probability pCertain    = new Probability(1.0);
 
 	@Test
-	public void ConstructorsTest() {
+	void constructors() {
 		double tooLow  = 0.0 - Double.MIN_VALUE;
 		double tooHigh = 1 + EPSILON;
 		double nan     = Double.NaN;
@@ -49,7 +51,7 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void complementTest() {
+	void complement() {
 		assertEquals(1.0, pImpossible.complement().value());
 		assertEquals(0.5,       pHalf.complement().value());
 		assertEquals(0.0,    pCertain.complement().value());
@@ -61,33 +63,28 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void matchTest() {
+	void booleanSupplierMatch() {
 		final int ITERATIONS = 100_000;
 
-		for (int i=0; i<ITERATIONS; i++) {
-			if (pImpossible.match()) {
+		for (int i=0; i<ITERATIONS; i++)
+			if (pImpossible.match())
 				throw new RuntimeException("an impossible probability should never match.");
-			}
-		}
 
-		for (int i=0; i<ITERATIONS; i++) {
-			if (!pCertain.match()) {
+		for (int i=0; i<ITERATIONS; i++)
+			if (!pCertain.match())
 				throw new RuntimeException("a certain probability should always match.");
-			}
-		}
 
 		int nbMatches = 0;
-		for (int i=0; i<ITERATIONS; i++) {
-			if (pHalf.match()) {
+		for (int i=0; i<ITERATIONS; i++)
+			if (pHalf.match())
 				nbMatches++;
-			}
-		}
+
 		double ratio = nbMatches / (double) ITERATIONS;
 		assertEquals(0.5, ratio, 0.01);
 	}
 
 	@Test
-	public void predicateMatchTest() {
+	void predicateMatch() {
 		final int SIZE = 10_000;
 
 		int[] randomInts = IntStream.range(0, SIZE)
@@ -108,7 +105,7 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void isImpossibleTest() {
+	void isImpossible() {
 		Probability p1 = new Probability(Double.MIN_VALUE);
 		assertTrue(pImpossible.isImpossible());
 		assertFalse(        p1.isImpossible());
@@ -117,7 +114,7 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void isCertainTest() {
+	void isCertain() {
 		Probability p1 = new Probability(0.999999);
 		assertTrue(    pCertain.isCertain());
 		assertFalse(         p1.isCertain());
@@ -126,14 +123,14 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void toProbabilityTest() {
+	void toProbability() {
 		assertTrue(pImpossible == pImpossible.toProbability());
 		assertTrue(pHalf       ==       pHalf.toProbability());
 		assertTrue(pCertain    ==    pCertain.toProbability());
 	}
 
 	@Test
-	public void toOddsTest() {
+	void toOdds() {
 		Odds oImpossible = pImpossible.toOdds();
 		Odds oHalf       = pHalf.toOdds();
 		Odds oCertain    = pCertain.toOdds();
@@ -146,7 +143,7 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void toLogOddsTest() {
+	void toLogOdds() {
 		LogOdds loImpossible = pImpossible.toLogOdds();
 		LogOdds loHalf       = pHalf.toLogOdds();
 		LogOdds loCertain    = pCertain.toLogOdds();
@@ -159,7 +156,7 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void compareToTest() {
+	void compareTo() {
 		Probability same   = new Probability(0.5);
 		Probability lower  = new Probability(0.5 - EPSILON);
 		Probability higher = new Probability(0.5 + EPSILON);
@@ -176,7 +173,7 @@ public class ProbabilityTest {
 
 	@Test
 	@SuppressWarnings("all") // to test equals() against unrelated type without having information dialog.
-	public void equalsTest() {
+	void equals() {
 		assertTrue(pImpossible.equals(new Probability(0.0)));
 		assertTrue(      pHalf.equals(new Probability(0.5)));
 		assertTrue(   pCertain.equals(new Probability(1.0)));
@@ -187,7 +184,7 @@ public class ProbabilityTest {
 	}
 
 	@Test
-	public void toStringTest() {
+	void ProbabilitytoString() {
 		assertEquals("0.0%",   pImpossible.toString());
 		assertEquals("15.2%",  new Probability(0.152).toString());
 		assertEquals("50.0%",  pHalf.toString());

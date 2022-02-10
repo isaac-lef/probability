@@ -9,7 +9,7 @@ public final class Odds extends Chance {
 	public Odds(final double value) {
 		super(value);
 		if (value < IMPOSSIBLE || Double.isNaN(value))
-			throw new IllegalArgumentException("Odds must be valid numbers between 0 and +∞ included");
+			throw new IllegalArgumentException("Odds must be valid numbers between 0 and +∞ included (input was "+value+")");
 	}
 
 	public static Odds impossible() {
@@ -29,7 +29,6 @@ public final class Odds extends Chance {
 		if (isImpossible()) {
 			return new Odds(Double.POSITIVE_INFINITY);
 		}
-		// TODO : verify if the case value=POSITIVE_INFINITY is correctly handled
 		return new Odds(1 / value);
 	}
 
@@ -37,7 +36,8 @@ public final class Odds extends Chance {
 
 	@Override
 	public boolean match() {
-		return ThreadLocalRandom.current().nextDouble(Double.MAX_VALUE) < value;
+		if (isCertain()) return true;
+		return ThreadLocalRandom.current().nextDouble() * (value+1) < value;
 	}
 
 	@Override

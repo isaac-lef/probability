@@ -9,7 +9,7 @@ public final class LogOdds extends Chance {
 	public LogOdds(double value) {
 		super(value);
 		if (Double.isNaN(value))
-			throw new IllegalArgumentException("Logarithmic odds should be a valid number between -∞ and +∞ included, not " + value + ".");
+			throw new IllegalArgumentException("Logarithmic odds should be a valid number between -∞ and +∞ included (input was " + value + ")");
 	}
 
 	public static LogOdds impossible() {

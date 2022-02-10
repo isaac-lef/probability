@@ -61,4 +61,9 @@ public abstract class Chance implements Comparable<Chance>{
 	public abstract Odds toOdds();
 
 	public abstract LogOdds toLogOdds();
+
+	/**
+	 * Natural order of Chances, from least probable to most probable.
+	 */
+	public abstract int compareTo(Chance c);
 }

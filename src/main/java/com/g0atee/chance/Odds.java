@@ -90,7 +90,9 @@ public final class Odds extends Chance {
 	@Override
 	public String toString() {
 		if (isImpossible()) return "0/1";
+		if (isCertain())    return "1/0";
 		Rational r = toRational(value);
+		gcdSimplify(r);
 		return "" + r.num + "/" + r.denom;
 	}
 
@@ -149,6 +151,29 @@ public final class Odds extends Chance {
 			rationalNumber = new Rational(sign * truncatedNumber, firstMultiplier - secondMultiplier);
 		}
 		return rationalNumber;
+	}
+
+	// My methods
+
+	private void gcdSimplify(Rational r) {
+		long gcd;
+		while((gcd = gcd(r.num, r.denom)) > 1L) {
+			r.num /= gcd;
+			r.denom /= gcd;
 		}
+	}
+
+	/**
+	 * Greatest Common Divisor of two Long numbers
+	 */
+	private static long gcd(final long a, final long b) {
+		if (a < 0 || b < 0)
+			throw new IllegalArgumentException("Cannot compute greatest common divisor of negative numbers (input of "+a+" and "+b+")");
+		if (a < b)
+			return gcd(b, a);
+		if (b == 0)
+			return a;
+		return gcd(b, a % b);
+	}
 	
 }

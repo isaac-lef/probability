@@ -115,7 +115,7 @@ public final class ProbabilityTest {
 
 	@Test
 	void isCertain() {
-		Probability p1 = new Probability(0.999999);
+		Probability p1 = new Probability(1 - EPSILON);
 		assertTrue(    pCertain.isCertain());
 		assertFalse(         p1.isCertain());
 		assertFalse(      pHalf.isCertain());
@@ -125,8 +125,8 @@ public final class ProbabilityTest {
 	@Test
 	void toProbability() {
 		assertTrue(pImpossible == pImpossible.toProbability());
-		assertTrue(pHalf       ==       pHalf.toProbability());
-		assertTrue(pCertain    ==    pCertain.toProbability());
+		assertTrue(pHalf       == pHalf.toProbability());
+		assertTrue(pCertain    == pCertain.toProbability());
 	}
 
 	@Test
@@ -134,9 +134,6 @@ public final class ProbabilityTest {
 		Odds oImpossible = pImpossible.toOdds();
 		Odds oHalf       = pHalf.toOdds();
 		Odds oCertain    = pCertain.toOdds();
-		assertTrue(oImpossible instanceof Odds);
-		assertTrue(oHalf       instanceof Odds);
-		assertTrue(oCertain    instanceof Odds);
 		assertEquals(0.0, oImpossible.value());
 		assertEquals(1.0, oHalf.value());
 		assertEquals(Double.POSITIVE_INFINITY, oCertain.value());
@@ -147,9 +144,6 @@ public final class ProbabilityTest {
 		LogOdds loImpossible = pImpossible.toLogOdds();
 		LogOdds loHalf       = pHalf.toLogOdds();
 		LogOdds loCertain    = pCertain.toLogOdds();
-		assertTrue(loImpossible instanceof LogOdds);
-		assertTrue(loHalf       instanceof LogOdds);
-		assertTrue(loHalf       instanceof LogOdds);
 		assertEquals(Double.NEGATIVE_INFINITY, loImpossible.value());
 		assertEquals(0.0, loHalf.value());
 		assertEquals(Double.POSITIVE_INFINITY, loCertain.value());
@@ -160,8 +154,8 @@ public final class ProbabilityTest {
 		Probability same   = new Probability(0.5);
 		Probability lower  = new Probability(0.5 - EPSILON);
 		Probability higher = new Probability(0.5 + EPSILON);
-		assertTrue(pHalf.compareTo(same  ) == 0);
-		assertTrue(pHalf.compareTo(lower ) >  0);
+		assertTrue(pHalf.compareTo(  same) == 0);
+		assertTrue(pHalf.compareTo( lower) >  0);
 		assertTrue(pHalf.compareTo(higher) <  0);
 		assertTrue(pHalf.compareTo(  same.toOdds()) == 0);
 		assertTrue(pHalf.compareTo( lower.toOdds()) >  0);

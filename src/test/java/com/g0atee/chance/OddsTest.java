@@ -1,7 +1,9 @@
 package com.g0atee.chance;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.stream.IntStream;
 
@@ -94,5 +96,87 @@ public final class OddsTest {
 		.filter(oCertain::match)
 		.toArray();
 		assertEquals(SIZE, full.length);
+	}
+
+	@Test
+	void isImpossible() {
+		Odds o1 = new Odds(Double.MIN_VALUE);
+		assertTrue(oImpossible.isImpossible());
+		assertFalse(        o1.isImpossible());
+		assertFalse(     oHalf.isImpossible());
+		assertFalse(  oCertain.isImpossible());
+	}
+
+	@Test
+	void isCertain() {
+		Odds o1 = new Odds(Double.MAX_VALUE);
+		assertTrue(    oCertain.isCertain());
+		assertFalse(         o1.isCertain());
+		assertFalse(      oHalf.isCertain());
+		assertFalse(oImpossible.isCertain());
+	}
+
+	@Test
+	void toProbability() {
+		Probability pImpossible = oImpossible.toProbability();
+		Probability pHalf       = oHalf.toProbability();
+		Probability pCertain    = oCertain.toProbability();
+		assertEquals(0.0, pImpossible.value());
+		assertEquals(0.5, pHalf.value());
+		assertEquals(1.0, pCertain.value());
+	}
+
+	@Test
+	void toOdds() {
+		assertTrue(oImpossible == oImpossible.toOdds());
+		assertTrue(oHalf       == oHalf.toOdds());
+		assertTrue(oCertain    == oCertain.toOdds());
+	}
+
+	@Test
+	void toLogOdds() {
+		LogOdds loImpossible = oImpossible.toLogOdds();
+		LogOdds loHalf       = oHalf.toLogOdds();
+		LogOdds loCertain    = oCertain.toLogOdds();
+		assertEquals(Double.NEGATIVE_INFINITY, loImpossible.value());
+		assertEquals(0.0, loHalf.value());
+		assertEquals(Double.POSITIVE_INFINITY, loCertain.value());
+	}
+
+	@Test
+	void compareTo() {
+		Odds same   = new Odds(1.0);
+		Odds lower  = new Odds(1.0 - EPSILON);
+		Odds higher = new Odds(1.0 + EPSILON);
+		assertTrue(oHalf.compareTo(  same.toProbability()) == 0);
+		assertTrue(oHalf.compareTo( lower.toProbability()) >  0);
+		assertTrue(oHalf.compareTo(higher.toProbability()) <  0);
+		assertTrue(oHalf.compareTo(  same) == 0);
+		assertTrue(oHalf.compareTo( lower) >  0);
+		assertTrue(oHalf.compareTo(higher) <  0);
+		assertTrue(oHalf.compareTo(  same.toLogOdds()) == 0);
+		assertTrue(oHalf.compareTo( lower.toLogOdds()) >  0);
+		assertTrue(oHalf.compareTo(higher.toLogOdds()) <  0);
+	}
+
+	@Test
+	@SuppressWarnings("all") // to test equals() against unrelated type without having information dialog.
+	void equals() {
+		assertTrue(oImpossible.equals(new Odds(0.0)));
+		assertTrue(      oHalf.equals(new Odds(1.0)));
+		assertTrue(   oCertain.equals(new Odds(Double.POSITIVE_INFINITY)));
+		assertFalse(oHalf.equals(new Odds(1.0 + EPSILON)));
+		assertFalse(oHalf.equals(new Odds(1.0 - EPSILON)));
+		assertFalse(oHalf.equals(null));
+		assertFalse(oHalf.equals("not even a number"));
+	}
+
+	@Test
+	void oddsToString() {
+		assertEquals("0/1", oImpossible.toString());
+		assertEquals("4/11", new Odds(4/11.0).toString());
+		assertEquals("1/1", oHalf.toString());
+		assertEquals("13/5", new Odds(13/5.0).toString());
+		assertEquals("1/0", oCertain.toString());
 	}
 }

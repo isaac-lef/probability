@@ -89,6 +89,7 @@ public final class Odds extends Chance {
 
 	@Override
 	public String toString() {
+		if (isImpossible()) return "0/1";
 		Rational r = toRational(value);
 		return "" + r.num + "/" + r.denom;
 	}

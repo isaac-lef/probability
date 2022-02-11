@@ -9,7 +9,7 @@ public final class LogOdds extends Chance {
 	public LogOdds(double value) {
 		super(value);
 		if (Double.isNaN(value))
-			throw new IllegalArgumentException("Logarithmic odds should be a valid number between -∞ and +∞ included (input was " + value + ")");
+			throw new IllegalArgumentException("Logarithmic odds must be a valid number between -∞ and +∞ included (input was "+value+")");
 	}
 
 	public static LogOdds impossible() {
@@ -33,7 +33,10 @@ public final class LogOdds extends Chance {
 
 	@Override
 	public boolean match() {
-		return ThreadLocalRandom.current().nextDouble(-Double.MAX_VALUE, Double.MAX_VALUE) < value;
+		if (isCertain()) return true;
+		// as the random number generator is continuous and not inversed logarithmic, we have to reduce the value to a probability
+		double odds = Math.exp(value);
+		return ThreadLocalRandom.current().nextDouble() * (odds+1) < odds;
 	}
 
 	@Override
@@ -82,6 +85,10 @@ public final class LogOdds extends Chance {
 
 	@Override
 	public String toString() {
+		if (isCertain())    return "+∞";
+		if (value >  0)     return "+" + Double.toString(value);
+		if (value == 0)     return "0.0"; // whether value is +0.0 or -0.0, the sign isn't shown.
+		if (isImpossible()) return "-∞";
 		return Double.toString(value);
 	}
 	

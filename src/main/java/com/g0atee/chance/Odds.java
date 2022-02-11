@@ -37,6 +37,7 @@ public final class Odds extends Chance {
 	@Override
 	public boolean match() {
 		if (isCertain()) return true;
+		// as the random number generator is continuous and not inversed, we have to reduce the value to a probability
 		return ThreadLocalRandom.current().nextDouble() * (value+1) < value;
 	}
 

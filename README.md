@@ -1,2 +1,2 @@
 # chance
-Classes to handle chances (probabilities, odds...)
+Java classes to handle chances (probabilities, odds, logarithmic odds)

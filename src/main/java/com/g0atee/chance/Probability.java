@@ -3,6 +3,8 @@ package com.g0atee.chance;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class Probability extends Chance {
+	private static final long serialVersionUID = 1L;
+
 	public static final double IMPOSSIBLE = 0.0;
 	public static final double CERTAIN = 1.0;
 

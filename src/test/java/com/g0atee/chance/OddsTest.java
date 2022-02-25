@@ -5,6 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
@@ -178,5 +184,28 @@ public final class OddsTest {
 		assertEquals("1/1", oHalf.toString());
 		assertEquals("13/5", new Odds(13/5.0).toString());
 		assertEquals("1/0", oCertain.toString());
+	}
+
+	@Test
+	void serialization() throws IOException, ClassNotFoundException {
+		String fileName = "odds serialization.txt";
+		Odds oOut = new Odds(0.564);
+
+		try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			objectOutputStream.writeObject(oOut);
+			objectOutputStream.flush();
+			objectOutputStream.close();
+		}
+		FileInputStream fileInputStream = new FileInputStream(fileName);
+		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+		Odds oIn = (Odds) objectInputStream.readObject();
+		objectInputStream.close();
+
+		assertTrue(oOut.value() == oIn.value());
+
+		// deleting created file
+		File f = new File(fileName);
+		f.delete();
 	}
 }

@@ -3,6 +3,8 @@ package com.g0atee.chance;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class LogOdds extends Chance {
+	private static final long serialVersionUID = 1L;
+
 	public static final double IMPOSSIBLE = Double.NEGATIVE_INFINITY;
 	public static final double CERTAIN = Double.POSITIVE_INFINITY;
 

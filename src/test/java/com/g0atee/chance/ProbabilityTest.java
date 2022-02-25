@@ -7,6 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.stream.IntStream;
 
 public final class ProbabilityTest {
@@ -184,5 +190,28 @@ public final class ProbabilityTest {
 		assertEquals("50.0%",  pHalf.toString());
 		assertEquals("73.8%",  new Probability(0.738).toString());
 		assertEquals("100.0%", pCertain.toString());
+	}
+
+	@Test
+	void serialization() throws IOException, ClassNotFoundException {
+		String fileName = "probability serialization.txt";
+		Probability pOut = new Probability(0.564);
+
+		FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+		objectOutputStream.writeObject(pOut);
+		objectOutputStream.flush();
+		objectOutputStream.close();
+
+		FileInputStream fileInputStream = new FileInputStream(fileName);
+		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+		Probability pIn = (Probability) objectInputStream.readObject();
+		objectInputStream.close();
+
+		assertTrue(pOut.value() == pIn.value());
+
+		// deleting created file
+		File f = new File(fileName);
+		f.delete();
 	}
 }

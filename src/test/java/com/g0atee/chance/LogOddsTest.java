@@ -5,6 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
@@ -173,5 +179,28 @@ public final class LogOddsTest {
 		assertEquals("0.0",   new LogOdds(+0.0).toString());
 		assertEquals("+15.3", new LogOdds(+15.3).toString());
 		assertEquals("+∞",    loCertain.toString());
+	}
+
+	@Test
+	void serialization() throws IOException, ClassNotFoundException {
+		String fileName = "probability serialization.txt";
+		LogOdds loOut = new LogOdds(0.564);
+
+		FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+		objectOutputStream.writeObject(loOut);
+		objectOutputStream.flush();
+		objectOutputStream.close();
+
+		FileInputStream fileInputStream = new FileInputStream(fileName);
+		ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+		LogOdds loIn = (LogOdds) objectInputStream.readObject();
+		objectInputStream.close();
+
+		assertTrue(loOut.value() == loIn.value());
+
+		// deleting created file
+		File f = new File(fileName);
+		f.delete();
 	}
 }

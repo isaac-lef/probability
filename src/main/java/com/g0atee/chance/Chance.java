@@ -1,6 +1,8 @@
 package com.g0atee.chance;
 
-public abstract class Chance implements Comparable<Chance>{
+import java.io.Serializable;
+
+public abstract class Chance implements Comparable<Chance>, Serializable {
 	protected final double value;
 
 	protected Chance(double value) {

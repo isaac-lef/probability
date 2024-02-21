@@ -25,7 +25,7 @@ public final class ProbabilityTest {
 	private static final Probability pCertain    = new Probability(1.0);
 
 	@Test
-	void constructors() {
+	void constructor() {
 		double tooLow  = 0.0 - Double.MIN_VALUE;
 		double tooHigh = 1 + EPSILON;
 		double nan     = Double.NaN;
@@ -46,14 +46,40 @@ public final class ProbabilityTest {
 		assertEquals("Probabilities must be valid numbers between 0 and 1 included (input was "+nan+")", e3.getMessage());
 
 		// Testing normal use case
-		Probability p1 = new Probability(0.564);
-		assertEquals(0.564, p1.value());
+		Probability p = new Probability(0.564);
+		assertEquals(0.564, p.value());
+	}
 
-		// testing impossible() & certain() static factory methods
-		Probability p2 = Probability.impossible();
-		Probability p3 = Probability.certain();
-		assertEquals(0.0, p2.value());
-		assertEquals(1.0, p3.value());
+	@Test
+	void fromOdds() {
+		Probability pImpossible = Probability.fromOdds(0.0);
+		Probability pHalf       = Probability.fromOdds(1.0);
+		Probability pCertain    = Probability.fromOdds(Double.POSITIVE_INFINITY);
+		assertEquals(0.0, pImpossible.value());
+		assertEquals(0.5, pHalf.value());
+		assertEquals(1.0, pCertain.value());
+	}
+
+	@Test
+	void fromLogOdds() {
+		Probability pImpossible = Probability.fromLogOdds(Double.NEGATIVE_INFINITY);
+		Probability pHalf       = Probability.fromLogOdds(0.0);
+		Probability pCertain    = Probability.fromLogOdds(Double.POSITIVE_INFINITY);
+		assertEquals(0.0, pImpossible.value());
+		assertEquals(0.5, pHalf.value());
+		assertEquals(1.0, pCertain.value());
+	}
+
+	@Test
+	void impossible() {
+		Probability p = Probability.impossible();
+		assertEquals(0.0, p.value());
+	}
+
+	@Test
+	void certain() {
+		Probability p = Probability.certain();
+		assertEquals(1.0, p.value());
 	}
 
 	@Test
@@ -63,9 +89,9 @@ public final class ProbabilityTest {
 		assertEquals(0.0,    pCertain.complement().value());
 
 		// Normal use case
-		Probability p1 = new Probability(0.347);
-		Probability p1c = p1.complement();
-		assertEquals(1 - 0.347, p1c.value());
+		Probability p = new Probability(0.347);
+		Probability pc = p.complement();
+		assertEquals(1 - 0.347, pc.value());
 	}
 
 	@Test
@@ -129,30 +155,23 @@ public final class ProbabilityTest {
 	}
 
 	@Test
-	void toProbability() {
-		assertTrue(pImpossible == pImpossible.toProbability());
-		assertTrue(pHalf       == pHalf.toProbability());
-		assertTrue(pCertain    == pCertain.toProbability());
-	}
-
-	@Test
 	void toOdds() {
-		Odds oImpossible = pImpossible.toOdds();
-		Odds oHalf       = pHalf.toOdds();
-		Odds oCertain    = pCertain.toOdds();
-		assertEquals(0.0, oImpossible.value());
-		assertEquals(1.0, oHalf.value());
-		assertEquals(Double.POSITIVE_INFINITY, oCertain.value());
+		double oImpossible = pImpossible.toOdds();
+		double oHalf       = pHalf.toOdds();
+		double oCertain    = pCertain.toOdds();
+		assertEquals(0.0, oImpossible);
+		assertEquals(1.0, oHalf);
+		assertEquals(Double.POSITIVE_INFINITY, oCertain);
 	}
 
 	@Test
 	void toLogOdds() {
-		LogOdds loImpossible = pImpossible.toLogOdds();
-		LogOdds loHalf       = pHalf.toLogOdds();
-		LogOdds loCertain    = pCertain.toLogOdds();
-		assertEquals(Double.NEGATIVE_INFINITY, loImpossible.value());
-		assertEquals(0.0, loHalf.value());
-		assertEquals(Double.POSITIVE_INFINITY, loCertain.value());
+		double loImpossible = pImpossible.toLogOdds();
+		double loHalf       = pHalf.toLogOdds();
+		double loCertain    = pCertain.toLogOdds();
+		assertEquals(Double.NEGATIVE_INFINITY, loImpossible);
+		assertEquals(0.0, loHalf);
+		assertEquals(Double.POSITIVE_INFINITY, loCertain);
 	}
 
 	@Test
@@ -163,12 +182,6 @@ public final class ProbabilityTest {
 		assertTrue(pHalf.compareTo(  same) == 0);
 		assertTrue(pHalf.compareTo( lower) >  0);
 		assertTrue(pHalf.compareTo(higher) <  0);
-		assertTrue(pHalf.compareTo(  same.toOdds()) == 0);
-		assertTrue(pHalf.compareTo( lower.toOdds()) >  0);
-		assertTrue(pHalf.compareTo(higher.toOdds()) <  0);
-		assertTrue(pHalf.compareTo(  same.toLogOdds()) == 0);
-		assertTrue(pHalf.compareTo( lower.toLogOdds()) >  0);
-		assertTrue(pHalf.compareTo(higher.toLogOdds()) <  0);
 	}
 
 	@Test

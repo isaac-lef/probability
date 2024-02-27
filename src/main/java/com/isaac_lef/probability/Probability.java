@@ -76,12 +76,12 @@ public final class Probability implements Comparable<Probability>, Serializable 
 	 * <p>Uses {@link java.util.concurrent.ThreadLocalRandom#nextDouble() ThreadLocalRandom.nextDouble()}</p>
 	 * <p>Not cryptographically secure!</p>
 	 */
-	public boolean match() {
+	public boolean apply() {
 		return ThreadLocalRandom.current().nextDouble() < value;
 	}
 
 	/**
-	 * <p>A {@link java.util.function.Predicate Predicate} that takes whatever object/value, and returns the result of {@link #match()}.</p>
+	 * <p>A {@link java.util.function.Predicate Predicate} that takes whatever object/value, and returns the result of {@link #apply()}.</p>
 	 * <p>For use in {@link java.util.stream.Stream#filter(java.util.function.Predicate) Stream.filter()} :</p>
 	 * <blockquote>
 	 * <code>
@@ -92,8 +92,8 @@ public final class Probability implements Comparable<Probability>, Serializable 
 	 * </code>
 	 * </blockquote>
 	 */
-	public <T> boolean match(T t) {
-		return match();
+	public <T> boolean apply(T t) {
+		return apply();
 	}
 
 	public boolean isImpossible() {

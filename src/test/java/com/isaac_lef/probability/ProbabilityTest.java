@@ -95,20 +95,20 @@ public final class ProbabilityTest {
 	}
 
 	@Test
-	void booleanSupplierMatch() {
+	void booleanSupplierApply() {
 		final int ITERATIONS = 100_000;
 
 		for (int i=0; i<ITERATIONS; i++)
-			if (pImpossible.match())
+			if (pImpossible.apply())
 				throw new RuntimeException("an impossible probability should never match.");
 
 		for (int i=0; i<ITERATIONS; i++)
-			if (!pCertain.match())
+			if (!pCertain.apply())
 				throw new RuntimeException("a certain probability should always match.");
 
 		int nbMatches = 0;
 		for (int i=0; i<ITERATIONS; i++)
-			if (pHalf.match())
+			if (pHalf.apply())
 				nbMatches++;
 
 		double ratio = nbMatches / (double) ITERATIONS;
@@ -116,22 +116,22 @@ public final class ProbabilityTest {
 	}
 
 	@Test
-	void predicateMatch() {
+	void predicateApply() {
 		final int SIZE = 10_000;
 
 		int[] randomInts = IntStream.range(0, SIZE)
-			.filter(pHalf::match)
+			.filter(pHalf::apply)
 			.toArray();
 		double ratio = randomInts.length / (double) SIZE;
 		assertEquals(0.5, ratio, 0.01);
 
 		int[] empty = IntStream.range(0, SIZE)
-			.filter(pImpossible::match)
+			.filter(pImpossible::apply)
 			.toArray();
 		assertEquals(0, empty.length);
 
 		int[] full = IntStream.range(0, SIZE)
-		.filter(pCertain::match)
+		.filter(pCertain::apply)
 		.toArray();
 		assertEquals(SIZE, full.length);
 	}

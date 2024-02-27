@@ -1,4 +1,4 @@
-package com.g0atee.chance;
+package com.isaac_lef.probability;
 
 import java.io.Serializable;
 import java.util.concurrent.ThreadLocalRandom;

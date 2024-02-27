@@ -1,4 +1,4 @@
-package com.g0atee.chance;
+package com.isaac_lef.probability;
 
 import org.junit.jupiter.api.Test;
 
